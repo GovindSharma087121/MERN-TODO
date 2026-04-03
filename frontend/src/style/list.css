@@ -1,0 +1,55 @@
+.task-list {
+    display: grid;
+    gap: 10px;
+    list-style: none;
+    margin: 20px;
+    grid-template-columns: 50px 50px 1fr 2fr auto;
+    padding: 50px;
+    align-self: center;
+}
+
+.list-header {
+    font-weight: bold;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #f0f0f0;
+}
+
+.list-item {
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #f0f0f0;
+}
+
+.delete-btn {
+    background-color: red;
+    width: 45%;
+}
+
+.delete-multiple {
+    width: 100px;
+    margin-left: 60px;
+}
+
+.delete-btn:hover {
+    background-color: rgba(255, 0, 0, 0.536);
+}
+
+.update-btn {
+    background-color: green;
+    width: 45%;
+    margin-left: 10px;
+    padding: 10px;
+    border-radius: 6px;
+    color: #fff;
+}
+
+.update-btn:hover {
+    background-color: rgb(54, 108, 54);
+}
+
+.empty-data {
+    text-align: center;
+    margin-top: 100px;
+    color: #7e7676;
+}
