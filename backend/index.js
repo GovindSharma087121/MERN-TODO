@@ -2,8 +2,6 @@ import express from 'express';
 import mongodb, { ObjectId } from 'mongodb';
 import { collectionName, connection } from './dbconfig.js';
 import cors from 'cors';
-import jwt from 'jsonwebtoken';
-import cookieParser from "cookie-parser"; // used to parse the cookies that got from the frontend side
 
 const url = "";
 
@@ -14,11 +12,9 @@ app.use(cors({
     credentials: true               // ''-------''
 }));
 
-app.use(cookieParser());
-
 app.use(express.json());
 
-app.post('/add-task', verifyJWTToken, async (req, res) => {
+app.post('/add-task', async (req, res) => {
 
     console.log("add-task route");
 
@@ -53,11 +49,9 @@ app.post('/add-task', verifyJWTToken, async (req, res) => {
     }
 });
 
-app.get("/tasks", verifyJWTToken, async (req, res) => {
+app.get("/tasks", async (req, res) => {
 
     const db = await connection();
-
-    console.log("cookies are ", req.cookies.token);
 
     const collection = db.collection(collectionName);
 
@@ -80,7 +74,7 @@ app.get("/tasks", verifyJWTToken, async (req, res) => {
 });
 
 
-app.delete("/delete-task/:id", verifyJWTToken, async (req, res) => {
+app.delete("/delete-task/:id", async (req, res) => {
 
     const id = req.params.id;
 
@@ -108,7 +102,7 @@ app.delete("/delete-task/:id", verifyJWTToken, async (req, res) => {
     }
 });
 
-app.delete("/delete-multiple", verifyJWTToken, async (req, res) => {
+app.delete("/delete-multiple", async (req, res) => {
     const db = await connection();
 
     console.log("delete multiple", req.body);
@@ -138,7 +132,7 @@ app.delete("/delete-multiple", verifyJWTToken, async (req, res) => {
     }
 })
 
-app.get("/get-task/:id", verifyJWTToken, async (req, res) => {
+app.get("/get-task/:id", async (req, res) => {
 
     const id = req.params.id;
 
@@ -166,7 +160,7 @@ app.get("/get-task/:id", verifyJWTToken, async (req, res) => {
     }
 });
 
-app.put("/update-task/:id", verifyJWTToken, async (req, res) => {
+app.put("/update-task/:id", async (req, res) => {
 
     const id = req.params.id;
 
@@ -203,90 +197,7 @@ app.put("/update-task/:id", verifyJWTToken, async (req, res) => {
     }
 });
 
-app.post("/signup", async (req, res) => {
-    const db = await connection();
 
-    const userData = req.body;
-
-    const collection = db.collection("users");
-
-    const result = collection.insertOne(req.body);
-
-
-    if (result) {
-        jwt.sign(userData, 'google', { expiresIn: '5d' }, (error, token) => {
-            res.send({
-                message: "Signup Successfully Done",
-                success: true,
-                token
-            })
-        });
-    }
-    else {
-        res.send({
-            message: "Something went wrong",
-            success: false
-        })
-    }
-});
-
-app.post('/login', async (req, res) => {
-
-    const userData = req.body;
-
-    console.log("login api req body", req.body);
-
-    const db = await connection();
-
-    const collection = db.collection('users');
-
-    if (userData.email && userData.password) {
-
-        const result = await collection.findOne({ email: userData.email, password: userData.password });
-
-        if (result) {
-            jwt.sign(userData, 'google', { expiresIn: '5d' }, (error, token) => {
-
-                if (token) {
-                    res.send({
-                        message: "login successfully done",
-                        success: true,
-                        token
-                    });
-                }
-            })
-        }
-        else {
-            res.send({
-                message: "user not found",
-                success: false
-            });
-        }
-    }
-    else {
-        res.send({
-            message: "something went wrong",
-            success: false
-        });
-    }
-});
-
-function verifyJWTToken(req, res, next) {
-
-    const token = req.cookies.token;
-
-    jwt.verify(token, 'google', (error, decodedToken) => {
-        if (error) {
-            return res.send({
-                message: "invalid token",
-                success: false
-            });
-        }
-
-        console.log("decodedToken", decodedToken);
-        next();
-    })
-}
 
 const PORT = process.env.PORT || 3200;
 app.listen(PORT, () => {
