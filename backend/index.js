@@ -1,6 +1,6 @@
 import express from 'express';
 import mongodb, { ObjectId } from 'mongodb';
-import { collectionName, connection } from './dbConfig.js';
+import { collectionName, connection } from './dbconfig.js';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import cookieParser from "cookie-parser"; // used to parse the cookies that got from the frontend side
@@ -288,6 +288,9 @@ function verifyJWTToken(req, res, next) {
     })
 }
 
-app.listen(3200);
+const PORT = process.env.PORT || 3200;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
 
 
