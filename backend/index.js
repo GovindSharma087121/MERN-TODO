@@ -19,6 +19,11 @@ app.use(cors({
 
 app.use(express.json());
 
+app.get('/', (req, res) => {
+    res.send("Backend API is running!");
+});
+
+
 app.post('/add-task', async (req, res) => {
 
     console.log("add-task route");
