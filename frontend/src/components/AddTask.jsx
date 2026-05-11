@@ -9,11 +9,11 @@ const AddTask = () => {
     const handleAddTask = async () => {
         console.log("task data", taskData);
 
-        const result = await fetch("http://localhost:3200/add-task", {
+        const result = await fetch("https://mern-todo-2r8z.onrender.com/add-task", {
             method: "Post",
             body: JSON.stringify(taskData),
             headers: { "Content-Type": "Application/Json" },
-            credentials : 'include'
+            credentials: 'include'
         });
 
         const res = await result.json();
@@ -23,7 +23,7 @@ const AddTask = () => {
         if (res.success) {
             navigate("/");
         }
-        else{
+        else {
             alert(res.message);
         }
     }

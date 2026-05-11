@@ -14,7 +14,7 @@ const Signup = () => {
     const handleSignup = async () => {
         console.log(userData);
 
-        const result = await fetch("http://localhost:3200/signup", {
+        const result = await fetch("https://mern-todo-2r8z.onrender.com/signup", {
             method: 'post',
             body: JSON.stringify(userData),
             headers: { "Content-Type": "Application/Json" }

@@ -15,7 +15,7 @@ const UpdateTask = () => {
     }, [])
 
     const getTask = async () => {
-        let res = await fetch("http://localhost:3200/get-task/" + id, { credentials: 'include' });
+        let res = await fetch("https://mern-todo-2r8z.onrender.com/get-task/" + id, { credentials: 'include' });
 
         console.log("res", res);
 
@@ -33,7 +33,7 @@ const UpdateTask = () => {
     const handleUpdateTask = async () => {
         console.log("task data", taskData);
 
-        const result = await fetch("http://localhost:3200/update-task/" + id, {
+        const result = await fetch("https://mern-todo-2r8z.onrender.com/update-task/" + id, {
             method: "PUT",
             body: JSON.stringify(taskData),
             headers: { "Content-Type": "Application/Json" },

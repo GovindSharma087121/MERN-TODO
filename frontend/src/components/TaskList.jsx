@@ -12,7 +12,7 @@ const TaskList = () => {
     }, [])
 
     const getListData = async () => {
-        const data = await fetch("http://localhost:3200/tasks", { credentials: 'include' }); // BY THIS ALL COOKIES ARE SEND TO BACKEND AUTOMATICALLY IN EACH REQUEST THAT ARE STORED IN THE WEBSITE
+        const data = await fetch("https://mern-todo-2r8z.onrender.com/tasks", { credentials: 'include' }); // BY THIS ALL COOKIES ARE SEND TO BACKEND AUTOMATICALLY IN EACH REQUEST THAT ARE STORED IN THE WEBSITE
 
         const listData = await data.json();
 
@@ -23,7 +23,7 @@ const TaskList = () => {
 
     const deleteTask = async (id) => {
 
-        const result = await fetch("http://localhost:3200/delete-task/" + id, { method: "delete", credentials: 'include' });
+        const result = await fetch("https://mern-todo-2r8z.onrender.com/delete-task/" + id, { method: "delete", credentials: 'include' });
 
         const res = await result.json();
 
@@ -39,7 +39,7 @@ const TaskList = () => {
 
         console.log("selectedTasks", selectedTasks);
 
-        const result = await fetch("http://localhost:3200/delete-multiple", {
+        const result = await fetch("https://mern-todo-2r8z.onrender.com/delete-multiple", {
             method: 'delete',
             body: JSON.stringify(selectedTasks),
             headers: { "Content-Type": "Application/Json" },

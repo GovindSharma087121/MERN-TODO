@@ -1,11 +1,16 @@
+import 'dotenv/config';
 import express from 'express';
 import mongodb, { ObjectId } from 'mongodb';
+import jwt from 'jsonwebtoken';
 import { collectionName, connection } from './dbconfig.js';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 const url = "";
 
 const app = express();
+
+app.use(cookieParser());
 
 app.use(cors({
     origin: "http://localhost:5173", // Add them for resolving CORS error that comes after installing the cookieParser library TO ALLOW COOKIE PARSER FOR A PARTICULAR DOMAIN OR PORT
@@ -198,10 +203,95 @@ app.put("/update-task/:id", async (req, res) => {
 });
 
 
+app.post("/signup", async (req, res) => {
+    const db = await connection();
+
+    const userData = req.body;
+
+    const collection = db.collection("users");
+
+    const result = collection.insertOne(req.body);
+
+
+    if (result) {
+        jwt.sign(userData, 'google', { expiresIn: '5d' }, (error, token) => {
+            res.send({
+                message: "Signup Successfully Done",
+                success: true,
+                token
+            })
+        });
+    }
+    else {
+        res.send({
+            message: "Something went wrong",
+            success: false
+        })
+    }
+});
+
+app.post('/login', async (req, res) => {
+
+    const userData = req.body;
+
+    console.log("login api req body", req.body);
+
+    const db = await connection();
+
+    const collection = db.collection('users');
+
+    if (userData.email && userData.password) {
+
+        const result = await collection.findOne({ email: userData.email, password: userData.password });
+
+        if (result) {
+            jwt.sign(userData, 'google', { expiresIn: '5d' }, (error, token) => {
+
+                if (token) {
+                    res.send({
+                        message: "login successfully done",
+                        success: true,
+                        token
+                    });
+                }
+            })
+        }
+        else {
+            res.send({
+                message: "user not found",
+                success: false
+            });
+        }
+    }
+    else {
+        res.send({
+            message: "something went wrong",
+            success: false
+        });
+    }
+});
+
+function verifyJWTToken(req, res, next) {
+
+    const token = req.cookies.token;
+
+    jwt.verify(token, 'google', (error, decodedToken) => {
+        if (error) {
+            return res.send({
+                message: "invalid token",
+                success: false
+            });
+        }
+
+        console.log("decodedToken", decodedToken);
+        next();
+    })
+}
 
 const PORT = process.env.PORT || 3200;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
+    console.log("process.env is ", process.env.PORT);
 });
 
 
